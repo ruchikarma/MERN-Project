@@ -15,7 +15,7 @@ const onFinish = async(values) => {
     if(response.success)
       {
           message.success(response.message);
-          console.log(response.message);
+          localStorage.setItem('token',response.data);
           navigate('/');
       }
   else {
