@@ -1,15 +1,39 @@
 import React from "react";
+import { LoginUser } from "../../apicalls/users";
+import { Button, Form, Input, message } from "antd";
+import{Link, useNavigate} from 'react-router-dom';
 
-import { Button, Form, Input } from "antd";
 
-const onFinish = (values) => {
-  console.log("Success:", values);
+
+const Login = () => {
+
+const navigate = useNavigate();
+
+const onFinish = async(values) => {
+  try{
+    const response= await LoginUser(values);
+    if(response.success)
+      {
+          message.success(response.message);
+          console.log(response.message);
+          navigate('/');
+      }
+  else {
+      message.error(response.message);
+      console.log(response.message); 
+  }
+
+  }catch(err)
+  {
+    message.error( err);
+  }
 };
+
 const onFinishFailed = (errorInfo) => {
   console.log("Failed:", errorInfo);
 };
 
-const Login = () => (
+return(
   <Form
     name="basic"
     labelCol={{
@@ -29,12 +53,12 @@ const Login = () => (
     autoComplete="off"
   >
     <Form.Item
-      label="Username"
-      name="username"
+      label="Email"
+      name="email"
       rules={[
         {
           required: true,
-          message: "Please input your username!",
+          message: "Please input your email!",
         },
       ]}
     >
@@ -55,18 +79,7 @@ const Login = () => (
       <Input.Password />
     </Form.Item>
 
-    {/* <Form.Item
-            name="remember"
-            valuePropName="checked"
-            wrapperCol={{
-                offset: 8,
-                span: 16,
-            }}
-        >
-            <Checkbox>Remember me</Checkbox>
-        </Form.Item>
-        <Link to="/login">Go To Login Page</Link> */}
-
+    <Link to="/register">Go to Register Page</Link>
     <Form.Item
       wrapperCol={{
         offset: 8,
@@ -76,7 +89,11 @@ const Login = () => (
       <Button type="primary" htmlType="submit">
         Submit
       </Button>
+
+     
     </Form.Item>
   </Form>
 );
+};
+
 export default Login;

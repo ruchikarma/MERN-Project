@@ -1,16 +1,37 @@
 import React from 'react';
-import { Link } from "react-router-dom";
-//import { Form } from "antd";
-import { Button, Checkbox, Form, Input } from "antd";
+import { Link ,useNavigate} from "react-router-dom";
+import { Button, Checkbox, Form, Input, message } from "antd";
+import { RegisterUser } from '../../apicalls/users';
 
-const onFinish = (values) => {
-    console.log('Success:', values);
-};
-const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
-};
 
-const Register = () => (
+
+const Register = () => {
+    const navigate=useNavigate();
+    const onFinish = async(values) => {
+        console.log("Form values:", values);
+        try{
+             const response= await RegisterUser(values);
+             if(response.success)
+                {
+                    message.success(response.message);
+                    console.log(response.message);
+                    navigate('/login')
+                }
+            else {
+                message.error(response.message);
+                console.log(response.message);
+            }
+        }
+        catch(err)
+        {
+           message.error(err);
+        }
+    };
+    const onFinishFailed = (errorInfo) => {
+        console.log('Failed:', errorInfo);
+    };
+
+    return (
     <Form
         name="basic"
         labelCol={{
@@ -86,9 +107,10 @@ const Register = () => (
             }}
         >
             <Button type="primary" htmlType="submit">
-                Submit
+                Register
             </Button>
         </Form.Item>
     </Form>
-);
+)
+}
 export default Register;
